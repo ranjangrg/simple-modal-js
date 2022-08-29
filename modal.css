@@ -1,0 +1,92 @@
+.modal-container {
+    --modal-close-btn-height: 2rem;
+    --modal-close-btn-width: 2rem;
+}
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: -100vw;
+    height: 100vh;
+    width: 100vw;
+}
+
+.modal-container[aria-expanded="false"] {
+    visibility: hidden;
+    opacity: 0;
+    left: -100vw;
+    background-color: rgba(0, 0, 0, 0);
+    transition: left 0.3s ease-out, background-color 0.3s ease-out 0.3s;
+}
+
+.modal-container.show,
+.modal-container[aria-expanded="true"] {
+    visibility: visible;
+    opacity: 1;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: left 0.3s ease-out, background-color 0.3s ease-out 0.3s;
+}
+
+.modal-container .close-modal-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row-reverse;
+    grid-column-gap: .2rem;
+}
+
+.close-modal-container .close-modal-btn {
+    position: relative;
+    height: var(--modal-close-btn-height);
+    width: var(--modal-close-btn-width);
+    padding: 0;
+    margin: 0.2rem;
+    background-color: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.close-modal-container .close-modal-btn-label {
+    color: white;
+    flex: 1 1;
+    align-self: center;
+    font-size: small;
+    font-weight: 300;
+    font-family: sans-serif;
+    opacity: 0;
+    transition: opacity .3s ease-in;
+}
+
+.close-modal-container .close-modal-btn:hover+.close-modal-btn-label,
+.close-modal-container .close-modal-btn:focus+.close-modal-btn-label {
+    opacity: 1;
+    transition: opacity .3s ease-in .6s;
+}
+
+.modal-container .modal-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    grid-row-gap: 1rem;
+}
+
+.modal-container .modal-content-wrapper .modal-title {
+    color: white;
+    font-size: xx-large;
+    text-align: center;
+}
+
+.modal-content-wrapper .modal-content {
+    position: relative;
+    background-color: white;
+    max-width: 80vw;
+    max-height: 80vh;
+    overflow-y: scroll;
+}

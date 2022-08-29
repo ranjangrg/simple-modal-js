@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="modal.css">
+    <script src="./modal.js"> </script>
+    <title> Simple usage demonstration </title>
+</head>
+
+<body>
+    <h1> Simple usage demonstration</h1>
+    <button type="button"> Button 1 </button>
+    <button type="button"> Button 2 </button>
+
+    <button type="button" id="open-modal-1-btn"> Button 3 </button>
+
+    <button type="button"> Button 4 </button>
+    <button type="button" id="open-modal-2-btn"> Button 5 </button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let _modalContent = `<article><h1> this is title </h1> <div> Content </div></article>`;
+            _modalContent = `This is only a button at <button type="button"> Button 1 </button>. This is only a button at <button type="button"> Button 2 </button>.`;
+
+            var modalCtl1 = new ModalController({
+                modalBtnElemId: "open-modal-1-btn",
+                modalTitle: "Hello",
+                modalContent: _modalContent + _modalContent + _modalContent + _modalContent + _modalContent + _modalContent
+            });
+
+            var modalCtl2 = new ModalController({
+                modalBtnElemId: "open-modal-2-btn",
+                modalTitle: "Hello",
+                modalContent: "Hello"
+            });
+        });
+    </script>
+</body>
+
+</html>
