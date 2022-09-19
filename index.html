@@ -13,32 +13,23 @@
 
 <body>
     <h1> Simple usage demonstration</h1>
-    <button type="button"> Button 1 </button>
-    <button type="button"> Button 2 </button>
+    
+    <button type="button" 
+        id="open-modal-1-btn" class="open-modal-btn"
+        data-modal-title="Modal title 1"
+        data-target-modal="modal-1-content"> Open modal 1 </button>
+    <div id="modal-1-content">
+        This is only a button at <button type="button"> Button within modal </button>. 
+    </div>
 
-    <button type="button" id="open-modal-1-btn"> Button 3 </button>
-
-    <button type="button"> Button 4 </button>
-    <button type="button" id="open-modal-2-btn"> Button 5 </button>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let _modalContent = `<article><h1> this is title </h1> <div> Content </div></article>`;
-            _modalContent = `This is only a button at <button type="button"> Button 1 </button>. This is only a button at <button type="button"> Button 2 </button>.`;
-
-            var modalCtl1 = new ModalController({
-                modalBtnElemId: "open-modal-1-btn",
-                modalTitle: "Hello",
-                modalContent: _modalContent + _modalContent + _modalContent + _modalContent + _modalContent + _modalContent
-            });
-
-            var modalCtl2 = new ModalController({
-                modalBtnElemId: "open-modal-2-btn",
-                modalTitle: "Hello",
-                modalContent: "Hello"
-            });
-        });
-    </script>
+    <button type="button" 
+        id="open-modal-2-btn" class="open-modal-btn" 
+        data-modal-title="Modal title 2"
+        data-target-modal="modal-2-content"> Open modal 2 </button>
+    <div id="modal-2-content" class="modal-content">
+        Modal 1 content
+    </div>
+    
 </body>
 
 </html>
