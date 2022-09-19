@@ -4,8 +4,11 @@ var ModalController = /** @class */ (function () {
         this.closeSymbol = "<svg xmlns=\"http://www.w3.org/2000/svg\" \n        width=\"".concat(this.closeSymbolDim, "\" height=\"").concat(this.closeSymbolDim, "\" \n        viewBox=\"0 0 ").concat(this.closeSymbolDim, " ").concat(this.closeSymbolDim, "\" \n        overflow=\"visible\" stroke=\"white\" stroke-width=\"5\" stroke-linecap=\"round\">\n        <line x2=\"").concat(this.closeSymbolDim, "\" y2=\"").concat(this.closeSymbolDim, "\" />\n        <line x1=\"").concat(this.closeSymbolDim, "\" y2=\"").concat(this.closeSymbolDim, "\" />\n    </svg>");
         this.modalBtnElem = document.getElementById(props.modalBtnElemId);
         this.modalContent = props.modalContent;
-        this.modalTitle = props.modalTitle;
-        this.modalContentElem = null;
+        // this.modalTitle = props.modalTitle;
+        this.modalTitle = this.modalBtnElem.dataset.modalTitle;
+        this.modalWrapperElem = null;
+        this.modalContentElem = document.getElementById(this.modalBtnElem.dataset.targetModal);
+        this.modalContentElem.classList.add("modal-content"); // assign proper classname
         this.createModalElement();
         this.attachModalContent();
         this.initEventTriggers();
@@ -17,13 +20,13 @@ var ModalController = /** @class */ (function () {
     };
     ModalController.prototype.createModalElement = function () {
         // main modal content container
-        var modalContentContainerElem = document.createElement("div");
-        modalContentContainerElem.setAttribute("id", this.modalBtnElem.id + "-modal-container");
-        modalContentContainerElem.setAttribute("class", "modal-container");
-        modalContentContainerElem.setAttribute("role", "dialog");
-        modalContentContainerElem.setAttribute("aria-modal", "true");
-        modalContentContainerElem.setAttribute("aria-expanded", "false");
-        modalContentContainerElem.setAttribute("aria-hidden", "true");
+        var _modalContentContainerElem = document.createElement("div");
+        _modalContentContainerElem.setAttribute("id", this.modalContentElem.id + "-modal-container");
+        _modalContentContainerElem.setAttribute("class", "modal-container");
+        _modalContentContainerElem.setAttribute("role", "dialog");
+        _modalContentContainerElem.setAttribute("aria-modal", "true");
+        _modalContentContainerElem.setAttribute("aria-expanded", "false");
+        _modalContentContainerElem.setAttribute("aria-hidden", "true");
         // close modal btn
         var modalCloseBtnElem = document.createElement("button");
         modalCloseBtnElem.setAttribute("class", "close-modal-btn");
@@ -34,51 +37,58 @@ var ModalController = /** @class */ (function () {
         modalCloseBtnContainerElem.setAttribute("class", "close-modal-container");
         modalCloseBtnContainerElem.append(modalCloseBtnElem);
         // close modal btn label
-        var modalCloseBtnLabelElem = document.createElement("div");
-        modalCloseBtnLabelElem.setAttribute("class", "close-modal-btn-label");
-        modalCloseBtnLabelElem.setAttribute("aria-hidden", "true");
-        modalCloseBtnLabelElem.textContent = "Close modal";
-        modalCloseBtnContainerElem.append(modalCloseBtnLabelElem);
+        var _modalCloseBtnLabelElem = document.createElement("div");
+        _modalCloseBtnLabelElem.setAttribute("class", "close-modal-btn-label");
+        _modalCloseBtnLabelElem.setAttribute("aria-hidden", "true");
+        _modalCloseBtnLabelElem.textContent = "Close modal";
+        modalCloseBtnContainerElem.append(_modalCloseBtnLabelElem);
         // main modal content
-        var modalContentElem = document.createElement("div");
-        modalContentElem.setAttribute("class", "modal-content");
-        modalContentElem.innerHTML = this.modalContent;
-        // main modal title
-        var modalTitleElem = document.createElement("div");
-        modalTitleElem.setAttribute("class", "modal-title");
-        modalTitleElem.textContent = this.modalTitle;
+        var _modalContentElem = document.createElement("div");
+        _modalContentElem.setAttribute("class", "modal-content");
+        _modalContentElem.innerHTML = this.modalContent;
+        // main modal title; is above main modal container within the background
+        var _modalTitleElem = document.createElement("div");
+        _modalTitleElem.setAttribute("class", "modal-title");
+        _modalTitleElem.textContent = this.modalTitle;
         // main modal content wrapper
-        var modalContentWrapperElem = document.createElement("div");
-        modalContentWrapperElem.setAttribute("class", "modal-content-wrapper");
-        modalContentWrapperElem.append(modalTitleElem);
-        modalContentWrapperElem.append(modalContentElem);
+        var _modalContentWrapperElem = document.createElement("div");
+        _modalContentWrapperElem.setAttribute("class", "modal-content-wrapper");
+        _modalContentWrapperElem.append(_modalTitleElem);
+        //modalContentWrapperElem.append(_modalContentElem);
+        _modalContentWrapperElem.append(this.modalContentElem);
         // add all elements next to the open modal btn in DOM
-        modalContentContainerElem.append(modalCloseBtnContainerElem);
-        modalContentContainerElem.append(modalContentWrapperElem);
-        this.modalContentElem = modalContentContainerElem;
+        _modalContentContainerElem.append(modalCloseBtnContainerElem);
+        _modalContentContainerElem.append(_modalContentWrapperElem);
+        this.modalWrapperElem = _modalContentContainerElem;
+    };
+    ModalController.prototype.updateModalContent = function (newContent) {
+        this.modalContentElem.innerHTML = newContent;
+    };
+    ModalController.prototype.updateModalTitle = function (newContent) {
+        this.modalTitle = newContent;
     };
     ModalController.prototype.attachModalContent = function () {
-        this.modalBtnElem.parentNode.insertBefore(this.modalContentElem, this.modalBtnElem.nextSibling);
+        this.modalBtnElem.parentNode.insertBefore(this.modalWrapperElem, this.modalBtnElem.nextSibling);
     };
     ModalController.prototype.initEventTriggers = function () {
         var mainObj = this;
         // click on background to close modal
-        this.modalContentElem.addEventListener("click", function (e) {
-            if (e.srcElement === mainObj.modalContentElem) {
+        this.modalWrapperElem.addEventListener("click", function (e) {
+            if (e.srcElement === mainObj.modalWrapperElem) {
                 // only if background is clicked
-                mainObj.closeModal(mainObj.modalContentElem);
+                mainObj.closeModal(mainObj.modalWrapperElem);
             }
-        }.bind(this.modalContentElem));
+        }.bind(this.modalWrapperElem));
         // open modal
         this.modalBtnElem.addEventListener("click", function () {
             mainObj.openModal();
         }.bind(mainObj));
         // close modal 
-        var closeModalElems = this.modalContentElem.getElementsByClassName("close-modal-container");
+        var closeModalElems = this.modalWrapperElem.getElementsByClassName("close-modal-container");
         for (var idx = 0; idx < closeModalElems.length; ++idx) {
             var elem = closeModalElems.item(idx);
             elem.addEventListener("click", function (e) {
-                mainObj.closeModal(mainObj.modalContentElem);
+                mainObj.closeModal(mainObj.modalWrapperElem);
             }.bind(mainObj));
         }
         ;
@@ -89,17 +99,17 @@ var ModalController = /** @class */ (function () {
         modalElem.classList.remove("show");
     };
     ModalController.prototype.openModal = function () {
-        this.modalContentElem.setAttribute("aria-expanded", "true");
-        this.modalContentElem.setAttribute("aria-hidden", "false");
+        this.modalWrapperElem.setAttribute("aria-expanded", "true");
+        this.modalWrapperElem.setAttribute("aria-hidden", "false");
         // this.modalContentElem.setAttribute("tabIndex", "0");
-        this.modalContentElem.classList.add("show");
+        this.modalWrapperElem.classList.add("show");
     };
     ModalController.prototype.trapFocusWithinModal = function () {
         var focusableElements = "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])";
-        var firstFocusableElement = this.modalContentElem.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
-        var focusableContent = this.modalContentElem.querySelectorAll(focusableElements);
+        var firstFocusableElement = this.modalWrapperElem.querySelectorAll(focusableElements)[0]; // get first element to be focused inside modal
+        var focusableContent = this.modalWrapperElem.querySelectorAll(focusableElements);
         var lastFocusableElement = focusableContent[focusableContent.length - 1]; // get last element to be focused inside modal
-        this.modalContentElem.addEventListener('keydown', function (e) {
+        this.modalWrapperElem.addEventListener('keydown', function (e) {
             var isTabPressed = e.key === 'Tab' || e.keyCode === 9;
             if (!isTabPressed) {
                 return;
@@ -120,5 +130,17 @@ var ModalController = /** @class */ (function () {
     };
     return ModalController;
 }());
+document.addEventListener("DOMContentLoaded", function () {
+    var openModalBtns = document.getElementsByClassName("open-modal-btn");
+    for (var idx = 0; idx < openModalBtns.length; ++idx) {
+        var btn = openModalBtns[idx];
+        // not sure how JS garbage-collector handles this controller object.
+        // haven't tested extensively on lifetime of this controller object and 
+        // modal event handlers like close-modal, open-modal etc.
+        var modalController = new ModalController({
+            modalBtnElemId: btn.id
+        });
+    }
+});
 // END OF FILE 
 //# sourceMappingURL=modal.js.map
